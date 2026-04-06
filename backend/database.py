@@ -1,16 +1,26 @@
-import os
-from motor.motor_asyncio import AsyncIOMotorClient
-from dotenv import load_dotenv
+from pymongo import MongoClient
 
-load_dotenv()
+MONGO_URL = "mongodb+srv://pravar:pravar@onehealth.rgkxgru.mongodb.net/?retryWrites=true&w=majority"
 
-MONGODB_URL = os.getenv("MONGODB_URL")
-DATABASE_NAME = os.getenv("DATABASE_NAME")
+client = None
+db = None
 
-# Create async client
-client = AsyncIOMotorClient(MONGODB_URL)
-database = client[DATABASE_NAME]
+try:
+    client = MongoClient(MONGO_URL)
+    
+    # Test connection
+    client.admin.command("ping")
+    print("✅ MongoDB Connected Successfully")
 
-# Define collections
-patient_collection = database.get_collection("patients")
-record_collection = database.get_collection("medical_records")
+    # Database name (you can change if needed)
+    db = client["onehealth"]
+
+except Exception as e:
+    print("❌ MongoDB Connection Failed:", e)
+
+if db is not None:
+    users_collection = db["users"]
+    records_collection = db["records"]
+else:
+    users_collection = None
+    records_collection = None
