@@ -1,43 +1,24 @@
-// Inside lib/main.dart
-class _MyHomePageState extends State<MyHomePage> {
-  String _dbStatus = "Checking...";
-  final ApiService _api = ApiService();
+import 'package:flutter/material.dart';
+import 'screens/navigation_menu.dart'; // Import the new navigation shell
 
-  @override
-  void initState() {
-    super.initState();
-    _checkStatus();
-  }
+void main() {
+  runApp(const OneHealthApp());
+}
 
-  void _checkStatus() async {
-    try {
-      // Calls the /test-db endpoint defined in your backend main.py
-      final response = await _api.checkBackendStatus(); 
-      setState(() {
-        _dbStatus = response ? "Backend Connected" : "Connection Failed";
-      });
-    } catch (e) {
-      setState(() { _dbStatus = "Error connecting to server"; });
-    }
-  }
+class OneHealthApp extends StatelessWidget {
+  const OneHealthApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Server Status:', style: TextStyle(fontSize: 18)),
-            Text(_dbStatus, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
-            ElevatedButton(
-              onPressed: _checkStatus,
-              child: const Text("Refresh Status"),
-            ),
-          ],
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'OneHealth AI',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF6366F1), // Indigo theme to match UI
+        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
       ),
+      home: const NavigationMenu(), // Pointing to the new multi-menu shell
     );
   }
 }

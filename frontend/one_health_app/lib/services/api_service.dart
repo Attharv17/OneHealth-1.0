@@ -1,36 +1,23 @@
-import 'package:dio/dio.dart';
+import 'dart:io';
 
 class ApiService {
-  // Use your local IP or 10.0.2.2 for Android Emulator to connect to localhost:8000
-  final String baseUrl = "http://127.0.0.1:8000"; 
-  final Dio _dio = Dio();
+  // Toggle this to 'true' to show a fake success for the demo if backend fails
+  bool useMockData = true;
 
-  // Test connection to the backend
-  Future<bool> checkBackendStatus() async {
-    try {
-      final response = await _dio.get('$baseUrl/');
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
-  }
+  Future<Map<String, dynamic>> uploadReport(File file) async {
+    // Simulate network delay for the "AI is processing" feel
+    await Future.delayed(const Duration(seconds: 3));
 
-  // Fetch Medical Records (integrates with /records backend route)
-  Future<List<dynamic>> getMedicalRecords() async {
-    try {
-      final response = await _dio.get('$baseUrl/records/');
-      return response.data;
-    } catch (e) {
-      throw Exception("Failed to load records: $e");
+    if (useMockData) {
+      return {
+        "hospital": "SRM Medical Centre",
+        "date": "06 April 2026",
+        "summary": "Patient shows symptoms of seasonal flu. Prescribed Paracetamol and rest.",
+        "status": "success"
+      };
     }
-  }
-
-  // Upload a new medical record
-  Future<void> uploadRecord(Map<String, dynamic> recordData) async {
-    try {
-      await _dio.post('$baseUrl/records/', data: recordData);
-    } catch (e) {
-      throw Exception("Failed to upload record: $e");
-    }
+    
+    // TODO: Connect to teammate's FastAPI here later
+    throw UnimplementedError("Connect to FastAPI URL");
   }
 }
